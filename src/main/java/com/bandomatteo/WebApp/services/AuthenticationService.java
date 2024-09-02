@@ -53,20 +53,14 @@ public class AuthenticationService {
          return AuthenticationResponseDTO
                  .builder()
                  .token(jwt)
+                 .userId(user.getId())
                  .build();
     }
 
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) {
-        System.out.println("Attempting to authenticate user with email: " + request.getEmail());
-
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
-            System.out.println("Authentication successful for email: " + request.getEmail());
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         } catch (Exception e) {
-            System.err.println("Authentication failed: " + e.getMessage());
-            e.printStackTrace();  // Stampa lo stack trace completo per il debug
             throw new RuntimeException("Invalid credentials", e);
         }
 
@@ -79,6 +73,7 @@ public class AuthenticationService {
         return AuthenticationResponseDTO
                 .builder()
                 .token(jwt)
+                .userId(user.getId())
                 .build();
     }
 
