@@ -30,20 +30,21 @@ public class ChatController {
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/loader/single")
-    public ResponseEntity<String> loadSingle(@RequestParam("file") MultipartFile file, @RequestParam("userId") String userId) {
+    public ResponseEntity<?> loadSingle(@RequestParam("file") MultipartFile file, @RequestParam("userId") String userId) {
         log.info("Starting loadSingle document");
 
         try {
             if (file.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File is empty");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\": \"File is empty\"}");
             }
 
-            embeddingService.loadSingleDocument(file,userId);
-            return ResponseEntity.ok("File uploaded successfully");
+            embeddingService.loadSingleDocument(file, userId);
+            return ResponseEntity.ok("{\"message\": \"File uploaded successfully\"}");
 
         } catch (Exception e) {
             log.error("Error during file upload", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"message\": \"File upload failed\"}");
         }
     }
+
 }
