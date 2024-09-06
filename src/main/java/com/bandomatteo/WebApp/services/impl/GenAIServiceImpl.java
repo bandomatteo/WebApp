@@ -41,6 +41,10 @@ public class GenAIServiceImpl implements GenAIService {
 
     private boolean isResponseRelevant(String response) {
 
-        return !(response.contains("Mi dispiace") || response.isEmpty() || response.contains("non contengono"));
+        return !(response.contains("Mi dispiace") ||
+                response.isEmpty() ||
+                response.contains("non contengono") ||
+                response.contains("I'm sorry")
+        );
     }
 }
