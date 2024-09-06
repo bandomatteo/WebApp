@@ -9,9 +9,15 @@ import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.loadDocument;
 
@@ -31,18 +37,26 @@ public class EmbeddingService {
         this.embeddingStore = embeddingStore;
     }
 
-    public boolean loadSingleDocument() {
+    public boolean loadSingleDocument(MultipartFile file) {
+        // Imposta la directory di destinazione
+        String userDir = System.getProperty("user.dir");
+        String saveDir = userDir + "/data/documents";
 
-        String fileName = "/sample.pdf";
-        String filePath = documentPath + fileName;
+        // Crea la directory se non esiste
+        File directory = new File(saveDir);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
 
-        try {
-            if (!Files.exists(Paths.get(filePath))) {
-                isFileUploaded = false;
-                return false;
-            }
+        // Salva sempre il file come "sample.pdf"
+        File savedFile = new File(directory, "sample.pdf");
 
-            Document document = loadDocument(filePath, new ApachePdfBoxDocumentParser());
+        try (FileOutputStream fos = new FileOutputStream(savedFile)) {
+            // Salva il file caricato nella directory
+            fos.write(file.getBytes());
+
+            // Carica il documento utilizzando il percorso del file salvato
+            Document document = loadDocument(savedFile.getAbsolutePath(), new ApachePdfBoxDocumentParser());
 
             EmbeddingStoreIngestor embeddingStoreIngestor = EmbeddingStoreIngestor.builder()
                     .documentSplitter(DocumentSplitters.recursive(300, 10))
@@ -55,9 +69,11 @@ public class EmbeddingService {
             isFileUploaded = true;
             return true;
 
-        } catch (Exception e) {
+        } catch (IOException e) {
+
             isFileUploaded = false;
             return false;
+
         }
     }
 

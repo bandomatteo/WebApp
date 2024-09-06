@@ -4,7 +4,10 @@ import com.bandomatteo.WebApp.domain.dto.ChatRequestDTO;
 import com.bandomatteo.WebApp.domain.dto.ChatResponseDTO;
 import com.bandomatteo.WebApp.services.EmbeddingService;
 import com.bandomatteo.WebApp.services.GenAIService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import static org.reflections.Reflections.log;
 
@@ -27,9 +30,20 @@ public class ChatController {
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/loader/single")
-    public void loadSingle(){
+    public ResponseEntity<String> loadSingle(@RequestParam("file") MultipartFile file) {
         log.info("Starting loadSingle document");
-        embeddingService.loadSingleDocument();
 
+        try {
+            if (file.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File is empty");
+            }
+
+            embeddingService.loadSingleDocument(file);
+            return ResponseEntity.ok("File uploaded successfully");
+
+        } catch (Exception e) {
+            log.error("Error during file upload", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
+        }
     }
 }
