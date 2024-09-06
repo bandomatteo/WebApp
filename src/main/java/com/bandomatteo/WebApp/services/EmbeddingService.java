@@ -37,25 +37,25 @@ public class EmbeddingService {
         this.embeddingStore = embeddingStore;
     }
 
-    public boolean loadSingleDocument(MultipartFile file) {
-        // Imposta la directory di destinazione
-        String userDir = System.getProperty("user.dir");
-        String saveDir = userDir + "/data/documents";
+    public boolean loadSingleDocument(MultipartFile file, String userId) {
 
-        // Crea la directory se non esiste
+        String userDir = System.getProperty("user.dir");
+        String saveDir = userDir + "/data/" + userId + "/documents";
+
+
         File directory = new File(saveDir);
         if (!directory.exists()) {
             directory.mkdirs();
         }
 
-        // Salva sempre il file come "sample.pdf"
+
         File savedFile = new File(directory, "sample.pdf");
 
         try (FileOutputStream fos = new FileOutputStream(savedFile)) {
-            // Salva il file caricato nella directory
+
             fos.write(file.getBytes());
 
-            // Carica il documento utilizzando il percorso del file salvato
+
             Document document = loadDocument(savedFile.getAbsolutePath(), new ApachePdfBoxDocumentParser());
 
             EmbeddingStoreIngestor embeddingStoreIngestor = EmbeddingStoreIngestor.builder()
@@ -73,7 +73,6 @@ public class EmbeddingService {
 
             isFileUploaded = false;
             return false;
-
         }
     }
 
