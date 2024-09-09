@@ -7,6 +7,7 @@ import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.openai.OpenAiChatModelName;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModelName;
 import dev.langchain4j.rag.DefaultRetrievalAugmentor;
@@ -41,7 +42,7 @@ public class AIConfig {
 
         return OpenAiEmbeddingModel.builder()
                 .apiKey(dotenv.get("OPENAI_API_KEY"))
-                .modelName(OpenAiEmbeddingModelName.TEXT_EMBEDDING_ADA_002)
+                .modelName(OpenAiEmbeddingModelName.TEXT_EMBEDDING_3_SMALL)
                 .build();
     }
     @Bean
@@ -81,8 +82,7 @@ public class AIConfig {
 
         return OpenAiChatModel.builder()
                 .apiKey(dotenv.get("OPENAI_API_KEY"))
-                .modelName(System.getProperty("langchain4j.open-ai.chat-model.model-name"))
-                .responseFormat("json_object")
+                .modelName(OpenAiChatModelName.GPT_4_O_MINI)
                 .build();
     }
 }
