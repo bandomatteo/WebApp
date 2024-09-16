@@ -51,7 +51,7 @@ spring.jpa.hibernate.ddl-auto=update
 Ricordati di creare un file `.env` nella root del progetto e di inserire la tua chiave API di OpenAI:
 
 ```
-OPENAI_API_KEY=```YOUR_API_KEY_HERE```
+OPENAI_API_KEY="YOUR_API_KEY_HERE"
 ```
 
 ### 🖥️ Avvio del progetto
