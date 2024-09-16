@@ -6,11 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponseDTO {
-
-    private String token;
-    private Long userId;
+@AllArgsConstructor
+@Builder
+public class ChatResponseDTO {
+    private String message;
 }
+
